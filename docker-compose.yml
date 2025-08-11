@@ -7,19 +7,24 @@ services:
       - "8000:80"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ../app-sfa-frontend:/usr/share/nginx/html
+    depends_on:
+      - frontend
+    networks:
+      - app-sfa-network
 
-  # app:
-  #   container_name: app-next-site
-  #   build: 
-  #     context: ../
-  #     dockerfile: app-next-site-infra/docker/node/Dockerfile
-  #   image: node
-  #   volumes:
-  #     - ../app-next-site:/var/www/html
-  #   ports:
-  #     - "3000:3000"
-  #   command: npm run dev
+  frontend:
+    container_name: frontend
+    build: 
+      context: ../
+      dockerfile: app-sfa-infrastructure/docker/node/Dockerfile
+      args:
+        NODEJS_VERSION: ${NODEJS_VERSION}
+    volumes:
+      - ../app-sfa-frontend:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      - app-sfa-network
 
   # db:
   #   container_name: fullstack-db
@@ -36,4 +41,8 @@ services:
   #     MYSQL_PASSWORD: password
 
 volumes:
-  app-next-site-volume:
+  app-sfa-volume:
+
+networks:
+  app-sfa-network:
+    driver: bridge
