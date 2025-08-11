@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      # - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ../app-sfa-frontend:/usr/share/nginx/html
 
   # app:
